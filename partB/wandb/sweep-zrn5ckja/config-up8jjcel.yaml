@@ -1,0 +1,10 @@
+wandb_version: 1
+
+batch_size:
+  value: 32
+lr:
+  value: 3.364374528306973e-05
+max_epochs:
+  value: 10
+unfreeze_layers:
+  value: 4

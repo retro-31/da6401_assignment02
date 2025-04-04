@@ -1,3 +1,4 @@
+program: train.py
 method: bayes
 metric:
   name: val_acc
@@ -22,18 +23,3 @@ parameters:
     max: 0.001
   max_epochs:
     value: 10
-
-command:
-  - ${env}
-  - python
-  - train.py
-  - "--num_filters=${num_filters}"
-  - "--activation=${activation}"
-  - "--filter_organisation=${filter_organisation}"
-  - "--batch_size=${batch_size}"
-  - "--lr=${lr}"
-  - "--max_epochs=${max_epochs}"
-  - "--dropout_rate=${dropout_rate}"
-  - ${args_no_boolean_flags}
-  - ${data_augmentation}
-  - ${use_batchnorm}

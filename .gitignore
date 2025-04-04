@@ -1,4 +1,6 @@
 partA/data
+partB/data
 partA/scripts/wandb
 partA/scripts/utils/__pycache__
-pac.txt
+partB/scripts/wandb
+partB/scripts/utils/__pycache__

@@ -1,0 +1,9 @@
+2025-04-04 22:17:32 INFO Running runs: []
+2025-04-04 22:17:32 INFO Agent received command: run
+2025-04-04 22:17:32 INFO Agent starting run with config:
+	batch_size: 32
+	lr: 3.364374528306973e-05
+	max_epochs: 10
+	unfreeze_layers: 4
+2025-04-04 22:17:32 INFO About to run command: /usr/bin/env python scripts/train_finetune.py --unfreeze_layers=${unfreeze_layers} --batch_size=${batch_size} --lr=${lr} --max_epochs=${max_epochs}
+2025-04-04 22:17:37 INFO Running runs: ['up8jjcel']

@@ -1,0 +1,15 @@
+program: train_finetune.py
+method: bayes
+metric:
+  name: val_acc
+  goal: maximize
+parameters:
+  unfreeze_layers:
+    values: [1, 2, 3, 4, 5]
+  batch_size:
+    values: [32, 64]
+  lr:
+    min: 0.00001
+    max: 0.001
+  max_epochs:
+    value: 10

@@ -12,6 +12,16 @@ from torch.utils.data import DataLoader
 import shutil
 import os
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 class CNNClassifier(pl.LightningModule):
     def __init__(self, lr=1e-3, **model_params):
         super().__init__()
@@ -59,8 +69,10 @@ def main():
     parser.add_argument("--num_filters", type=int, default=32)
     parser.add_argument("--activation", type=str, default="ReLU")
     parser.add_argument("--filter_organisation", type=str, default="same")
-    parser.add_argument("--data_augmentation", action='store_true')
-    parser.add_argument("--use_batchnorm", action='store_true')
+    parser.add_argument("--data_augmentation", type=str2bool, default=False,
+                        help="Use data augmentation (True/False)")
+    parser.add_argument("--use_batchnorm", type=str2bool, default=False,
+                        help="Use BatchNorm (True/False)")
     parser.add_argument("--dropout_rate", type=float, default=0.0)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--max_epochs", type=int, default=10)
