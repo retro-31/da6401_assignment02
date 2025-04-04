@@ -9,6 +9,8 @@ import torch
 import argparse
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+import shutil
+import os
 
 class CNNClassifier(pl.LightningModule):
     def __init__(self, lr=1e-3, **model_params):
@@ -66,7 +68,6 @@ def main():
 
     args = parser.parse_args()
 
-    # Define a meaningful run name for wandb
     run_name = (
         f"filters_{args.num_filters}_"
         f"act_{args.activation}_"
@@ -82,8 +83,13 @@ def main():
 
     config = wandb.config
     wandb_logger = WandbLogger(project="da6401-partA-sweep")
+    
     checkpoint_callback = ModelCheckpoint(
-        dirpath='../models', save_top_k=1, monitor='val_acc', mode='max'
+        dirpath='../models',
+        filename='best_{val_acc:.3f}',
+        save_top_k=1,
+        monitor='val_acc',
+        mode='max'
     )
 
     activation_cls = getattr(nn, config.activation)
@@ -130,9 +136,15 @@ def main():
     test_accuracy = evaluate_test(model, test_loader, device)
     print(f"Test Accuracy: {test_accuracy:.4f}")
 
-    # Log test accuracy explicitly
     wandb.log({"test_acc": test_accuracy})
+
+    # Explicitly copy best checkpoint as "best.ckpt"
+    best_model_path = checkpoint_callback.best_model_path
+    final_best_path = '../models/best.ckpt'
+
+    if best_model_path:
+        shutil.copy(best_model_path, final_best_path)
+        print(f"Best model saved explicitly as {final_best_path}")
 
 if __name__ == "__main__":
     main()
-
