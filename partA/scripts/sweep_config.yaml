@@ -3,25 +3,37 @@ metric:
   name: val_acc
   goal: maximize
 parameters:
+  num_filters:
+    values: [32, 64]
+  activation:
+    values: ['ReLU', 'GELU', 'SiLU', 'Mish']
+  filter_organisation:
+    values: ['same', 'double', 'half']
+  data_augmentation:
+    values: [True, False]
+  use_batchnorm:
+    values: [True, False]
+  dropout_rate:
+    values: [0.0, 0.2, 0.3]
+  batch_size:
+    values: [32, 64]
   lr:
     min: 0.00001
     max: 0.001
-  num_filters:
-    values: [16, 32, 64]
-  num_conv_layers:
-    values: [3, 4, 5]
-  kernel_size:
-    values: [3, 5]
-  activation:
-    values: ['ReLU', 'GELU', 'SiLU', 'Mish']
-  dense_neurons:
-    values: [64, 128, 256]
-  batch_size:
-    values: [32, 64]
   max_epochs:
     value: 10
 
 command:
   - ${env}
   - python
-  - scripts/train.py
+  - train.py
+  - "--num_filters=${num_filters}"
+  - "--activation=${activation}"
+  - "--filter_organisation=${filter_organisation}"
+  - "--batch_size=${batch_size}"
+  - "--lr=${lr}"
+  - "--max_epochs=${max_epochs}"
+  - "--dropout_rate=${dropout_rate}"
+  - ${args_no_boolean_flags}
+  - ${data_augmentation}
+  - ${use_batchnorm}

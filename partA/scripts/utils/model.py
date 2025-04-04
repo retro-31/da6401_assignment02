@@ -1,27 +1,37 @@
 import torch.nn as nn
 
 class FlexibleCNN(nn.Module):
-    def __init__(self, input_channels=3, num_classes=10, num_conv_layers=5,
-                 num_filters=32, kernel_size=3, activation=nn.ReLU, dense_neurons=128):
+    def __init__(self, num_filters=32, activation=nn.ReLU, 
+                 filter_organisation='same', use_batchnorm=False, 
+                 dropout_rate=0.0, num_classes=10):
         super().__init__()
         layers = []
-        in_channels = input_channels
-        for _ in range(num_conv_layers):
-            layers += [
-                nn.Conv2d(in_channels, num_filters, kernel_size=kernel_size, padding=kernel_size//2),
-                activation(),
-                nn.MaxPool2d(2)
-            ]
-            in_channels = num_filters
+        in_channels = 3
+
+        filter_sizes = []
+        if filter_organisation == 'same':
+            filter_sizes = [num_filters] * 5
+        elif filter_organisation == 'double':
+            filter_sizes = [num_filters * (2 ** i) for i in range(5)]
+        elif filter_organisation == 'half':
+            filter_sizes = [max(num_filters // (2 ** i), 8) for i in range(5)]
+
+        for out_channels in filter_sizes:
+            layers.append(nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1))
+            if use_batchnorm:
+                layers.append(nn.BatchNorm2d(out_channels))
+            layers.append(activation())
+            layers.append(nn.MaxPool2d(2))
+            if dropout_rate > 0:
+                layers.append(nn.Dropout2d(dropout_rate))
+            in_channels = out_channels
+
         self.conv_layers = nn.Sequential(*layers)
         self.flatten = nn.Flatten()
-        self.dense_layers = nn.Sequential(
-            nn.Linear(num_filters * (224 // (2 ** num_conv_layers)) ** 2, dense_neurons),
-            activation(),
-            nn.Linear(dense_neurons, num_classes)
-        )
+        self.fc = nn.Linear(in_channels * 7 * 7, num_classes)  # Assuming input images 224x224 and 5 maxpools
 
     def forward(self, x):
         x = self.conv_layers(x)
         x = self.flatten(x)
-        return self.dense_layers(x)
+        return self.fc(x)
+
