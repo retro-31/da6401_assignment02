@@ -114,10 +114,5 @@ watch -n1 nvidia-smi
 ```
 
 - **Weights & Biases Dashboards:**
-  - [Report](https://wandb.ai/](https://wandb.ai/retro-31-indian-institute-of-technology-madras/da6401_assignment2/reports/DA6401-Assignment-2--VmlldzoxMjExMTQxMg)
+  - [Report](https://wandb.ai/retro-31-indian-institute-of-technology-madras/da6401_assignment2/reports/DA6401-Assignment-2--VmlldzoxMjExMTQxMg)
 
-## Best Practices
-
-- Ensure consistent train, validation, and test splits.
-- Regularly commit progress to GitHub.
-- Document hyperparameter choices and experimental outcomes clearly.
